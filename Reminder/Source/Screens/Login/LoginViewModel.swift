@@ -8,15 +8,26 @@
 import Foundation
 import Firebase
 
+enum LoginError: Error {
+    case authenticationFailed(String)
+    
+    var localizedDescription: String {
+        switch self {
+        case .authenticationFailed(let message):
+            return message
+        }
+    }
+}
+
 class LoginViewModel {
-    func auth(email: String, password: String, completion: (() -> Void)?) {
+    func auth(email: String, password: String, completion: @escaping (Result<Void, LoginError>) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
-            if let error = error {
-                print(error)
+            if error != nil {
+                completion(.failure(.authenticationFailed("Verifique suas credenciais e tente novamente!")))
                 return
             }
             
-            completion?()
+            completion(.success(()))
         }
     }
 }

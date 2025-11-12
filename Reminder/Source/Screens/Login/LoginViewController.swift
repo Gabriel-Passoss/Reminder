@@ -55,6 +55,14 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func presentLoginErrorAlert(error: String) {
+        let alert = UIAlertController(title: "Erro ao realizar login", message: error, preferredStyle: .alert)
+        let retryAction = UIAlertAction(title: "Tentar novamente", style: .cancel)
+        alert.addAction(retryAction)
+        
+        self.present(alert, animated: true)
+    }
+    
     private func presentRememberMeAlert(email: String) {
         let alert = UIAlertController(title: "Salvar acesso", message: "Deseja salvar seu acesso para futuras sessões?", preferredStyle: .alert)
         
@@ -76,8 +84,13 @@ class LoginViewController: UIViewController {
 
 extension LoginViewController: LoginViewDelegate {
     func sendLoginData(email: String, password: String) {
-        viewModel.auth(email: email, password: password) { [weak self] in
-            self?.presentRememberMeAlert(email: email)
+        viewModel.auth(email: email, password: password) { [weak self] result in
+            switch result {
+            case .success:
+                self?.presentRememberMeAlert(email: email)
+            case .failure(let error):
+                self?.presentLoginErrorAlert(error: error.localizedDescription)
+            }
         }
     }
 }
