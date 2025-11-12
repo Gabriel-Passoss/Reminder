@@ -8,11 +8,12 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-    let loginView = LoginView()
+    let contentView: LoginView
     let viewModel = LoginViewModel()
     weak var flowDelegate: LoginFlowDelegate?
     
-    init(flowDelegate: LoginFlowDelegate) {
+    init(view: LoginView, flowDelegate: LoginFlowDelegate) {
+        self.contentView = view
         self.flowDelegate = flowDelegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -24,46 +25,59 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loginView.delegate = self
+        contentView.delegate = self
         setup()
         setupConstraints()
-        setupGesture()
     }
     
     private func setup() {
-        self.view.addSubview(loginView)
-        loginView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            loginView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            loginView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            loginView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            loginView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.45),
+            contentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            contentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            contentView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.45),
         ])
-    }
-    
-    private func setupGesture() {
-        
     }
     
     func animateShowLogin(completion: (() -> Void)? = nil) {
         self.view.layoutIfNeeded()
-        loginView.transform = CGAffineTransform(translationX: 0, y: CGFloat(loginView.frame.height))
+        contentView.transform = CGAffineTransform(translationX: 0, y: CGFloat(contentView.frame.height))
         UIView.animate(withDuration: 0.3, animations: {
-            self.loginView.transform = .identity
+            self.contentView.transform = .identity
             self.view.layoutIfNeeded()
         }) { _ in
                 completion?()
         }
     }
+    
+    private func presentRememberMeAlert(email: String) {
+        let alert = UIAlertController(title: "Salvar acesso", message: "Deseja salvar seu acesso para futuras sessões?", preferredStyle: .alert)
+        
+        let saveAction = UIAlertAction(title: "Salvar", style: .default) { _ in
+            let user = User(email: email, rememberMe: true)
+            UserDefaultsManager.saveUser(user)
+            self.flowDelegate?.navigateToHome()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Não salvar", style: .cancel) { _ in
+            self.flowDelegate?.navigateToHome()
+        }
+        
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true)
+    }
 }
 
 extension LoginViewController: LoginViewDelegate {
     func sendLoginData(email: String, password: String) {
-        viewModel.auth(email: email, password: password) {
-            self.flowDelegate?.navigateToHome()
+        viewModel.auth(email: email, password: password) { [weak self] in
+            self?.presentRememberMeAlert(email: email)
         }
     }
 }

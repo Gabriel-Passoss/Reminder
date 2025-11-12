@@ -9,4 +9,5 @@ import Foundation
 
 protocol SplashFlowDelegate: AnyObject {
     func showLoginBottomSheet()
+    func navigateToHome()
 }

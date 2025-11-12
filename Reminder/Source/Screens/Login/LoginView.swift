@@ -112,7 +112,7 @@ class LoginView: UIView {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            loginLabel.topAnchor.constraint(equalTo: topAnchor, constant: 48),
+            loginLabel.topAnchor.constraint(equalTo: topAnchor, constant: 32),
             loginLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             
             emailLabel.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 40),

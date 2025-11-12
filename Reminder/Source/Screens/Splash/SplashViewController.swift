@@ -8,10 +8,11 @@
 import UIKit
 
 class SplashViewController: UIViewController {
-    let contentView = SplashView()
+    let contentView: SplashView
     weak var flowDelegate: SplashFlowDelegate?
     
-    init(flowDelegate: SplashFlowDelegate) {
+    init(view: SplashView, flowDelegate: SplashFlowDelegate) {
+        self.contentView = view
         self.flowDelegate = flowDelegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -24,8 +25,8 @@ class SplashViewController: UIViewController {
         super.viewDidLoad()
         
         setup()
+        startBreathingAnimation()
         setupConstraints()
-        setupGesture()
     }
     
     private func setup() {
@@ -43,14 +44,32 @@ class SplashViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
+    
+    private func decideNavigationFlow() {
+        if let user = UserDefaultsManager.loadUser(), user.rememberMe {
+            flowDelegate?.navigateToHome()
+        } else {
+            animateLogoUp()
+            self.flowDelegate?.showLoginBottomSheet()
+        }
+    }
+}
 
-    @objc
-    private func showLoginBottomSheet() {
-        self.flowDelegate?.showLoginBottomSheet()
+extension SplashViewController {
+    private func startBreathingAnimation() {
+        UIView.animate(withDuration: 1.5, 
+                      delay: 0,
+                      options: [.curveEaseInOut],
+                      animations: {
+            self.contentView.imageView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        }) { _ in
+            self.decideNavigationFlow()
+        }
     }
     
-    private func setupGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showLoginBottomSheet))
-        self.view.addGestureRecognizer(tapGesture)
+    private func animateLogoUp() {
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseOut], animations: {
+            self.contentView.imageView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1).translatedBy(x: 0, y: -100)
+        })
     }
 }
