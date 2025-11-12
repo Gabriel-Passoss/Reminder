@@ -10,17 +10,17 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private var coordinator: ReminderCoordinator?
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: scene)
-        let viewController = SplashViewController()
+        let coordinator = ReminderCoordinator()
+        self.coordinator = coordinator // Manter referência forte
         
-        let navigation = UINavigationController(rootViewController: viewController)
-        
-        window.rootViewController = navigation
+        window.rootViewController = coordinator.start()
         self.window = window
         window.makeKeyAndVisible()
     }
@@ -30,6 +30,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
+        
+        coordinator = nil // Limpar referência
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
