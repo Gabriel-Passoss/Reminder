@@ -19,4 +19,16 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         let viewController = LoginViewController(view: loginView, flowDelegate: flowDelegate)
         return viewController
     }
+    
+    func makeHomeViewController(flowDelegate: HomeFlowDelegate) -> HomeViewController {
+        let homeView = HomeView()
+        let viewController = HomeViewController(view: homeView, flowDelegate: flowDelegate)
+        return viewController
+    }
+    
+    func makeNewRecipeViewController() -> NewRecipeViewController {
+        let newRecipeView = NewRecipeView()
+        let viewController = NewRecipeViewController(view: newRecipeView)
+        return viewController
+    }
 }

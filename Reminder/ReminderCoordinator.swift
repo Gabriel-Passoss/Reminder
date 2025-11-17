@@ -35,9 +35,18 @@ extension ReminderCoordinator: LoginFlowDelegate {
     func navigateToHome() {
         self.navigation?.dismiss(animated: true)
         
-        let viewController = UIViewController()
-        viewController.view.backgroundColor = .red
-        
+        let viewController = viewControllerFactory.makeHomeViewController(flowDelegate: self)
+        self.navigation?.pushViewController(viewController, animated: true)
+    }
+}
+extension ReminderCoordinator: HomeFlowDelegate {
+    func logout() {
+        self.navigation?.popViewController(animated: true)
+        self.showLoginBottomSheet()
+    }
+    
+    func navigateToNewRecipe() {
+        let viewController = viewControllerFactory.makeNewRecipeViewController()
         self.navigation?.pushViewController(viewController, animated: true)
     }
 }

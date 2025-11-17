@@ -5,7 +5,7 @@
 //  Created by Gabriel on 12/11/25.
 //
 
-import Foundation
+import UIKit
 
 class UserDefaultsManager {
     private static let userKey = "userKey"
@@ -28,5 +28,26 @@ class UserDefaultsManager {
         }
         
         return nil
+    }
+    
+    static func updateUser(image: UIImage?, name: String?) {
+        guard var currentUser = loadUser() else {
+            return
+        }
+        
+        if let imageData = image?.jpegData(compressionQuality: 1.0) {
+            currentUser.image = imageData
+        }
+        
+        if let name = name {
+            currentUser.name = name
+        }
+        
+        saveUser(currentUser)
+    }
+    
+    static func removeUser() {
+        UserDefaults.standard.removeObject(forKey: userKey)
+        UserDefaults.standard.synchronize()
     }
 }
