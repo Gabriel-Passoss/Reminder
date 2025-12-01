@@ -28,7 +28,19 @@ class NewRecipeViewController: UIViewController {
         view.addSubview(contentView)
         view.backgroundColor = Colors.gray800
         
+        contentView.delegate = self
+        
         contentView.translatesAutoresizingMaskIntoConstraints = false
         setupContentViewToBounds(contentView)
+    }
+}
+
+extension NewRecipeViewController: NewRecipeViewDelegate {
+    func backToHome() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func createRecipe(_ recipe: Recipe) {
+        DatabaseManager.shared.insertRecipe(recipe)
     }
 }

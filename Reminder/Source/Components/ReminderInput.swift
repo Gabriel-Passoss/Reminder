@@ -7,11 +7,23 @@
 
 import UIKit
 
+enum ReminderInputType {
+    case text
+    case time
+    case select
+}
+
 class ReminderInput: UIView {
-    let inputLabel: UILabel = {
+    let label: String
+    let type: ReminderInputType
+    var placeholder: String? = ""
+    var done: (() -> Void)?
+    
+    lazy var inputLabel: UILabel = {
         let label = UILabel()
         label.font = Typography.label
         label.textColor = Colors.gray100
+        label.text = self.label
         
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -34,14 +46,24 @@ class ReminderInput: UIView {
         return textField
     }()
     
-    init(label: String, placeholder: String? = nil) {
-        super.init(frame: .zero)
+    let timePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .time
+        picker.preferredDatePickerStyle = .wheels
         
-        inputLabel.text = label
-        textField.placeholder = placeholder
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        return picker
+    }()
+    
+    init(label: String, type: ReminderInputType = .text) {
+        self.label = label
+        self.type = type
+        
+        super.init(frame: .zero)
         
         setup()
         setupConstraints()
+        setupInputType()
     }
     
     required init?(coder: NSCoder) {
@@ -66,5 +88,38 @@ class ReminderInput: UIView {
             textField.bottomAnchor.constraint(equalTo: bottomAnchor),
             textField.heightAnchor.constraint(equalToConstant: 56),
         ])
+    }
+    
+    private func setupInputType() {
+        switch self.type {
+        case .text:
+            break
+        case .time:
+            setupTimeInput()
+        case .select:
+            break
+        }
+    }
+    
+    private func setupTimeInput() {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.setItems([flexible, doneButton], animated: false)
+        
+        textField.inputAccessoryView = toolbar
+        textField.inputView = timePicker
+    }
+    
+    @objc
+    private func doneTapped() {
+        textField.resignFirstResponder()
+        done?()
+    }
+    
+    func getText() -> String {
+        return textField.text ?? ""
     }
 }

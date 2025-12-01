@@ -27,7 +27,7 @@ final class DatabaseManager {
     
     private func createTable() {
         let createTableQuery = """
-        CREATE TABLE IF NOT EXISTS Receipts (
+        CREATE TABLE IF NOT EXISTS recipes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             remedy TEXT,
             time TEXT,
@@ -50,15 +50,15 @@ final class DatabaseManager {
         sqlite3_finalize(statement)
     }
     
-    func insertReceipt(remedy: String, time: String, recurrence: String, takeNow: Bool) {
-        let insertQuery = "INSERT INTO Receipts (remedy, time, recurrence, takeNow) VALUES (?, ?, ?, ?);"
+    func insertRecipe(_ recipe: Recipe) {
+        let insertQuery = "INSERT INTO recipes (remedy, time, recurrence, takeNow) VALUES (?, ?, ?, ?);"
         var statement: OpaquePointer?
         
         if (sqlite3_prepare_v2(db, insertQuery, -1, &statement, nil) == SQLITE_OK) {
-            sqlite3_bind_text(statement, 1, (remedy as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(statement, 2, (time as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(statement, 3, (recurrence as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(statement, 4, (takeNow ? 1 : 0))
+            sqlite3_bind_text(statement, 1, (recipe.remedy as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 2, (recipe.time as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(statement, 3, (recipe.recurrence as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(statement, 4, (recipe.takeNow ? 1 : 0))
             
             if sqlite3_step(statement) == SQLITE_DONE {
                 print("Receita inserida com sucesso !")

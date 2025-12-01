@@ -8,10 +8,14 @@
 import UIKit
 
 class NewRecipeView: UIView {
-    let backButton: UIButton = {
+    weak var delegate: NewRecipeViewDelegate?
+    
+    lazy var backButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "arrow.left"), for: .normal)
         button.tintColor = Colors.gray100
+        
+        button.addTarget(self, action: #selector(didBackButtonTapped), for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -39,17 +43,23 @@ class NewRecipeView: UIView {
     }()
     
     let medicationNameTextField: ReminderInput = {
-        let textField = ReminderInput(label: "Remédio", placeholder: "Nome do remédio")
+        let textField = ReminderInput(label: "Remédio")
+        textField.placeholder = "Nome do remédio"
+        
         return textField
     }()
     
     let medicationScheduleTextField: ReminderInput = {
-        let textField = ReminderInput(label: "Horário", placeholder: "00:00")
+        let textField = ReminderInput(label: "Horário", type: .time)
+        textField.placeholder = "00:00"
+        
         return textField
     }()
     
     let recurrenceTextField: ReminderInput = {
-        let textField = ReminderInput(label: "Recorrência", placeholder: "Selecione")
+        let textField = ReminderInput(label: "Recorrência")
+        textField.placeholder = "Selecione"
+        
         return textField
     }()
     
@@ -59,13 +69,16 @@ class NewRecipeView: UIView {
         return checkbox
     }()
     
-    let saveButton: ReminderButton = {
+    lazy var saveButton: ReminderButton = {
         let button = ReminderButton(
             title: "Adicionar",
             icon: UIImage(systemName: "plus")!,
             backgroundColor: Colors.primaryRedBase,
             textColor: Colors.gray800
         )
+        
+        button.tapAction = didNewRecipeButtonTapped
+        
         return button
     }()
     
@@ -117,9 +130,26 @@ class NewRecipeView: UIView {
             takeNowCheckbox.topAnchor.constraint(equalTo: recurrenceTextField.bottomAnchor, constant: 20),
             takeNowCheckbox.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             
-            saveButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            saveButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -12),
             saveButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             saveButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
         ])
+    }
+    
+    @objc
+    private func didBackButtonTapped() {
+        delegate?.backToHome()
+    }
+    
+    @objc
+    private func didNewRecipeButtonTapped() {
+        let recipe = Recipe(
+            remedy: medicationNameTextField.getText(),
+            time: medicationScheduleTextField.getText(),
+            recurrence: recurrenceTextField.getText(),
+            takeNow: false
+        )
+        
+        delegate?.createRecipe(recipe)
     }
 }

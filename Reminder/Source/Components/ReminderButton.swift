@@ -10,7 +10,7 @@ import UIKit
 class ReminderButton: UIView {
     var tapAction: (() -> Void)?
     
-    private lazy var button: UIButton = {
+    lazy var button: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.imagePadding = 8
         configuration.imagePlacement = .leading
