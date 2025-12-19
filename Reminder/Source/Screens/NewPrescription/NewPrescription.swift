@@ -57,7 +57,17 @@ class NewPrescription: UIView {
     }()
     
     let recurrenceTextField: ReminderInput = {
-        let textField = ReminderInput(label: "Recorrência")
+        let textField = ReminderInput(label: "Recorrência", type: .select)
+        textField.selectPickerOptions = [
+            "De hora em hora",
+            "2 em 2 horas",
+            "4 em 4 horas",
+            "6 em 6 horas",
+            "8 em 8 horas",
+            "12 em 12 horas",
+            "Um por dia"
+        ]
+        
         textField.placeholder = "Selecione"
         
         return textField
@@ -86,6 +96,8 @@ class NewPrescription: UIView {
         super.init(frame: .zero)
         setup()
         setupConstraints()
+        setupInputObservers()
+        validateInputs() // Valida inicialmente (botão começa desabilitado)
     }
     
     required init?(coder: NSCoder) {
@@ -134,6 +146,28 @@ class NewPrescription: UIView {
             saveButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
             saveButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
         ])
+    }
+    
+    private func setupInputObservers() {
+        medicationNameTextField.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        medicationScheduleTextField.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        recurrenceTextField.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    }
+    
+    @objc
+    private func textFieldDidChange() {
+        validateInputs()
+    }
+    
+    private func validateInputs() {
+        let isMedicationNameFilled = !medicationNameTextField.getText().isEmpty
+        let isMedicationScheduleFilled = !medicationScheduleTextField.getText().isEmpty
+        let isRecurrenceFilled = !recurrenceTextField.getText().isEmpty
+        
+        let allFieldsFilled = isMedicationNameFilled && isMedicationScheduleFilled && isRecurrenceFilled
+        
+        saveButton.button.isEnabled = allFieldsFilled
+        saveButton.button.backgroundColor = allFieldsFilled ? Colors.primaryRedBase : Colors.gray700
     }
     
     @objc

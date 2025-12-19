@@ -16,7 +16,12 @@ enum ReminderInputType {
 class ReminderInput: UIView {
     let label: String
     let type: ReminderInputType
-    var placeholder: String? = ""
+    var selectPickerOptions: [String]?
+    var placeholder: String? = "" {
+        didSet {
+            textField.placeholder = placeholder
+        }
+    }
     var done: (() -> Void)?
     
     lazy var inputLabel: UILabel = {
@@ -50,6 +55,15 @@ class ReminderInput: UIView {
         let picker = UIDatePicker()
         picker.datePickerMode = .time
         picker.preferredDatePickerStyle = .wheels
+        
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        return picker
+    }()
+    
+    lazy var selectPicker: UIPickerView = {
+        let picker = UIPickerView()
+        picker.delegate = self
+        picker.dataSource = self
         
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
@@ -91,21 +105,25 @@ class ReminderInput: UIView {
     }
     
     private func setupInputType() {
+        textField.placeholder = placeholder
+        
         switch self.type {
         case .text:
             break
         case .time:
             setupTimeInput()
         case .select:
-            break
+            setupSelectInput()
         }
     }
     
     private func setupTimeInput() {
+        textField.tintColor = .clear
+        
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
         
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(timeInputDoneTapped))
         let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         toolbar.setItems([flexible, doneButton], animated: false)
         
@@ -114,12 +132,53 @@ class ReminderInput: UIView {
     }
     
     @objc
-    private func doneTapped() {
+    private func timeInputDoneTapped() {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        textField.text = formatter.string(from: timePicker.date)
+        
         textField.resignFirstResponder()
+        textField.sendActions(for: .editingChanged)
         done?()
+    }
+    
+    private func setupSelectInput() {
+        textField.tintColor = .clear
+        
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(selectInputDoneTapped))
+        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.setItems([flexible, doneButton], animated: false)
+        
+        textField.inputAccessoryView = toolbar
+        textField.inputView = selectPicker
+    }
+    
+    @objc
+    private func selectInputDoneTapped() {
+        let selectedRow = selectPicker.selectedRow(inComponent: 0)
+        textField.text = selectPickerOptions?[selectedRow]
+        textField.resignFirstResponder()
+        textField.sendActions(for: .editingChanged)
     }
     
     func getText() -> String {
         return textField.text ?? ""
+    }
+}
+
+extension ReminderInput: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return selectPickerOptions?.count ?? 0
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return selectPickerOptions?[row]
     }
 }
