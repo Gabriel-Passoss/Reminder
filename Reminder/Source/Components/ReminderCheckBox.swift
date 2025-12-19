@@ -8,6 +8,12 @@
 import UIKit
 
 class ReminderCheckBox: UIView {
+    var isChecked: Bool = false {
+        didSet {
+            updateCheckboxAppearance()
+        }
+    }
+    
     private let checkBox: UIButton = {
         let button = UIButton(type: .system)
         var config = UIButton.Configuration.plain()
@@ -35,6 +41,7 @@ class ReminderCheckBox: UIView {
         
         setup()
         setupConstraints()
+        setupActions()
     }
     
     required init?(coder: NSCoder) {
@@ -58,6 +65,21 @@ class ReminderCheckBox: UIView {
             label.leadingAnchor.constraint(equalTo: checkBox.trailingAnchor, constant: 12),
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+    }
+    
+    private func setupActions() {
+        checkBox.addTarget(self, action: #selector(checkboxTapped), for: .touchUpInside)
+    }
+    
+    @objc private func checkboxTapped() {
+        isChecked.toggle()
+    }
+    
+    private func updateCheckboxAppearance() {
+        var config = checkBox.configuration
+        config?.image = UIImage(systemName: isChecked ? "checkmark.square.fill" : "square")
+        config?.baseForegroundColor = isChecked ? Colors.primaryRedBase : Colors.gray400
+        checkBox.configuration = config
     }
 }
 

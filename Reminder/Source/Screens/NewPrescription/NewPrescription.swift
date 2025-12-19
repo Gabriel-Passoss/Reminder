@@ -185,5 +185,14 @@ class NewPrescription: UIView {
         )
         
         delegate?.createPrescription(prescription)
+        clearInputs()
+    }
+    
+    private func clearInputs() {
+        medicationNameTextField.textField.text = ""
+        medicationScheduleTextField.textField.text = ""
+        recurrenceTextField.textField.text = ""
+        takeNowCheckbox.isChecked = false
+        validateInputs()
     }
 }
