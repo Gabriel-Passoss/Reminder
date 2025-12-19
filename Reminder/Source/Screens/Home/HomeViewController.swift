@@ -26,7 +26,7 @@ class HomeViewController: UIViewController {
         
         setup()
         setupConstraints()
-        setupNewRecipeNavigation()
+        setupNewPrescriptionNavigation()
         loadUserData()
         contentView.delegate = self
     }
@@ -52,9 +52,9 @@ class HomeViewController: UIViewController {
 }
 
 extension HomeViewController {
-    private func setupNewRecipeNavigation() {
-        contentView.newRecipeButton.onTap = { [weak self] in
-            self?.flowDelegate?.navigateToNewRecipe()
+    private func setupNewPrescriptionNavigation() {
+        contentView.newPrescriptionButton.onTap = { [weak self] in
+            self?.flowDelegate?.navigateToNewPrescription()
         }
     }
 }

@@ -45,8 +45,8 @@ extension ReminderCoordinator: HomeFlowDelegate {
         self.showLoginBottomSheet()
     }
     
-    func navigateToNewRecipe() {
-        let viewController = viewControllerFactory.makeNewRecipeViewController()
+    func navigateToNewPrescription() {
+        let viewController = viewControllerFactory.makeNewPrescriptionViewController()
         self.navigation?.pushViewController(viewController, animated: true)
     }
 }

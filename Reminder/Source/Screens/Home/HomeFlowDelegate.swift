@@ -9,5 +9,5 @@ import Foundation
 
 protocol HomeFlowDelegate: AnyObject {
     func logout() -> Void
-    func navigateToNewRecipe() -> Void
+    func navigateToNewPrescription() -> Void
 }

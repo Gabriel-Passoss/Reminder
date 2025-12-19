@@ -87,7 +87,7 @@ class HomeView: UIView {
         return button
     }()
     
-    let newRecipeButton: HomeButtonView = {
+    let newPrescriptionButton: HomeButtonView = {
         let button = HomeButtonView(
             icon: UIImage(named: "pills-icon")!,
             title: "Nova receita",
@@ -134,7 +134,7 @@ class HomeView: UIView {
         
         addSubview(contentBackground)
         contentBackground.addSubview(myPrescriptionsButton)
-        contentBackground.addSubview(newRecipeButton)
+        contentBackground.addSubview(newPrescriptionButton)
         contentBackground.addSubview(feedbackButton)
     }
     
@@ -164,9 +164,9 @@ class HomeView: UIView {
                 myPrescriptionsButton.leadingAnchor.constraint(equalTo: contentBackground.leadingAnchor, constant: 32),
                 myPrescriptionsButton.trailingAnchor.constraint(equalTo: contentBackground.trailingAnchor, constant: -32),
                 
-                newRecipeButton.topAnchor.constraint(equalTo: myPrescriptionsButton.bottomAnchor, constant: 16),
-                newRecipeButton.leadingAnchor.constraint(equalTo: contentBackground.leadingAnchor, constant: 32),
-                newRecipeButton.trailingAnchor.constraint(equalTo: contentBackground.trailingAnchor, constant: -32),
+                newPrescriptionButton.topAnchor.constraint(equalTo: myPrescriptionsButton.bottomAnchor, constant: 16),
+                newPrescriptionButton.leadingAnchor.constraint(equalTo: contentBackground.leadingAnchor, constant: 32),
+                newPrescriptionButton.trailingAnchor.constraint(equalTo: contentBackground.trailingAnchor, constant: -32),
                 
                 feedbackButton.heightAnchor.constraint(equalToConstant: 56),
                 feedbackButton.bottomAnchor.constraint(equalTo: contentBackground.bottomAnchor, constant: -Metrics.medium),

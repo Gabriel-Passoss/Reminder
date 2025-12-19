@@ -26,9 +26,9 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         return viewController
     }
     
-    func makeNewRecipeViewController() -> NewRecipeViewController {
-        let newRecipeView = NewRecipeView()
-        let viewController = NewRecipeViewController(view: newRecipeView)
+    func makeNewPrescriptionViewController() -> NewPrescriptionViewController {
+        let newPrescriptionView = NewPrescription()
+        let viewController = NewPrescriptionViewController(view: newPrescriptionView)
         return viewController
     }
 }

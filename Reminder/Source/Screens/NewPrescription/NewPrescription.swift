@@ -7,8 +7,8 @@
 
 import UIKit
 
-class NewRecipeView: UIView {
-    weak var delegate: NewRecipeViewDelegate?
+class NewPrescription: UIView {
+    weak var delegate: NewPrescriptionViewDelegate?
     
     lazy var backButton: UIButton = {
         let button = UIButton()
@@ -77,7 +77,7 @@ class NewRecipeView: UIView {
             textColor: Colors.gray800
         )
         
-        button.tapAction = didNewRecipeButtonTapped
+        button.tapAction = didNewPrescriptionButtonTapped
         
         return button
     }()
@@ -142,14 +142,14 @@ class NewRecipeView: UIView {
     }
     
     @objc
-    private func didNewRecipeButtonTapped() {
-        let recipe = Recipe(
+    private func didNewPrescriptionButtonTapped() {
+        let prescription = Prescription(
             remedy: medicationNameTextField.getText(),
             time: medicationScheduleTextField.getText(),
             recurrence: recurrenceTextField.getText(),
             takeNow: false
         )
         
-        delegate?.createRecipe(recipe)
+        delegate?.createPrescription(prescription)
     }
 }

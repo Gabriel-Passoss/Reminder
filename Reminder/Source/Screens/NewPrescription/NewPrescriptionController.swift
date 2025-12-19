@@ -7,10 +7,10 @@
 
 import UIKit
 
-class NewRecipeViewController: UIViewController {
-    private let contentView: NewRecipeView
+class NewPrescriptionViewController: UIViewController {
+    private let contentView: NewPrescription
     
-    init(view: NewRecipeView) {
+    init(view: NewPrescription) {
         self.contentView = view
         super.init(nibName: nil, bundle: nil)
     }
@@ -35,12 +35,12 @@ class NewRecipeViewController: UIViewController {
     }
 }
 
-extension NewRecipeViewController: NewRecipeViewDelegate {
+extension NewPrescriptionViewController: NewPrescriptionViewDelegate {
     func backToHome() {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func createRecipe(_ recipe: Recipe) {
-        DatabaseManager.shared.insertRecipe(recipe)
+    func createPrescription(_ prescription: Prescription) {
+        DatabaseManager.shared.insertPrescription(prescription)
     }
 }

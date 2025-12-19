@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol NewRecipeViewDelegate: AnyObject {
-    func createRecipe(_ recipe: Recipe)
+protocol NewPrescriptionViewDelegate: AnyObject {
+    func createPrescription(_ prescription: Prescription)
     func backToHome()
 }

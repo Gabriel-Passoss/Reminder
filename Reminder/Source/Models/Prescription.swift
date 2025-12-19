@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Recipe {
+struct Prescription {
     let remedy: String
     let time: String
     let recurrence: String
