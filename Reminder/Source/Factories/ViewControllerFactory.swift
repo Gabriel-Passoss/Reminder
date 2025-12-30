@@ -31,4 +31,10 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         let viewController = NewPrescriptionViewController(view: newPrescriptionView)
         return viewController
     }
+    
+    func makeMyPrescriptionsViewController() -> MyPrescriptionsViewController {
+        let myPrescriptionsView = MyPrescriptionsView()
+        let viewController = MyPrescriptionsViewController(view: myPrescriptionsView)
+        return viewController
+    }
 }

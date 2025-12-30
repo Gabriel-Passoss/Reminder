@@ -178,6 +178,7 @@ class NewPrescription: UIView {
     @objc
     private func didNewPrescriptionButtonTapped() {
         let prescription = Prescription(
+            id: Int.random(in: 1...100000),
             remedy: medicationNameTextField.getText(),
             time: medicationScheduleTextField.getText(),
             recurrence: recurrenceTextField.getText(),

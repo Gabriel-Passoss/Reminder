@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+protocol MyPrescriptionsViewDelegate: AnyObject {
+    func didBackButtonTapped() -> Void
+    func didAddButtonTapped() -> Void
+}

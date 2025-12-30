@@ -70,4 +70,54 @@ final class DatabaseManager {
         }
         sqlite3_finalize(statement)
     }
+    
+    func fetchPrescriptions() -> [Prescription] {
+        let selectQuery = "SELECT id, remedy, time, recurrence, takeNow FROM prescriptions;"
+        var statement: OpaquePointer?
+        var prescriptions: [Prescription] = []
+        
+        if sqlite3_prepare_v2(db, selectQuery, -1, &statement, nil) == SQLITE_OK {
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+                let remedy = String(cString: sqlite3_column_text(statement, 1))
+                let time = String(cString: sqlite3_column_text(statement, 2))
+                let recurrence = String(cString: sqlite3_column_text(statement, 3))
+                let takeNow = sqlite3_column_int(statement, 4) == 1
+                
+                let prescription = Prescription(
+                    id: id,
+                    remedy: remedy,
+                    time: time,
+                    recurrence: recurrence,
+                    takeNow: takeNow
+                )
+                
+                prescriptions.append(prescription)
+            }
+            print("Buscou \(prescriptions.count) receitas com sucesso")
+        } else {
+            print("SELECT statement falhou")
+        }
+        
+        sqlite3_finalize(statement)
+        return prescriptions
+    }
+    
+    func deleteReceipt(byId id: Int) {
+        let deleteQuery = "DELETE FROM prescriptions WHERE id = ?;"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, deleteQuery, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_int(statement, 1, Int32(id))
+            
+            if sqlite3_step(statement) == SQLITE_DONE {
+                print("Receita deletada")
+            } else {
+                print("Erro ao deletar a receita")
+            }
+        } else {
+            print("Delete statement falhou")
+        }
+        sqlite3_finalize(statement)
+    }
 }

@@ -10,4 +10,5 @@ import Foundation
 protocol HomeFlowDelegate: AnyObject {
     func logout() -> Void
     func navigateToNewPrescription() -> Void
+    func navigateToMyPrescriptions() -> Void
 }

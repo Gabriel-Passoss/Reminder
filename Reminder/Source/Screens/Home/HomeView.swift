@@ -77,7 +77,7 @@ class HomeView: UIView {
         return textField
     }()
     
-    private let myPrescriptionsButton: HomeButtonView = {
+    let myPrescriptionsButton: HomeButtonView = {
         let button = HomeButtonView(
             icon: UIImage(named: "paper-icon")!,
             title: "Minhas receitas",
